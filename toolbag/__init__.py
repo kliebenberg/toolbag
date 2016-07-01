@@ -10,6 +10,7 @@ import os
 import sys
 import pickle
 
+
 #
 from ui import UI
 
@@ -18,7 +19,7 @@ from config import *
 
 from providers import ida
 
-from PySide import QtCore, QtGui
+from PyQt5 import *
 
 
 class ToolBag:
@@ -34,7 +35,7 @@ class ToolBag:
         if options['show_splash']:
             splash_image = options['ida_user_dir'] + os.sep + "rsrc" + os.sep + "splash.png"
             pixmap = QtGui.QPixmap(splash_image)
-            splash = QtGui.QSplashScreen(pixmap)
+            splash = QtWidgets.QSplashScreen(pixmap)
             splash.show()
 
         if options['file_system_type'] == 'netnode':
@@ -88,12 +89,10 @@ class ToolBag:
         self.ui.master = self.master
         
 
-
 print '[*] Initializing Toolbag'
 print '-'*80
 print "[*] Options:"
 for k,v in options.iteritems():
     print "        %s => %s" % (k,v)
 print '-'*80
-
 toolbag = ToolBag(options)
