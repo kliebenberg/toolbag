@@ -22,7 +22,7 @@ import subprocess
 import types
 
 # PySide
-from PySide import QtCore, QtGui
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 # Toolbag stuff
 import segment
@@ -106,19 +106,19 @@ class Applier(PluginForm):
 
     def OnCreate(self, form):
         self.myform = form
-        self.parent = self.FormToPySideWidget(form)
+        self.parent = self.FormToPyQtWidget(form)
         self.PopulateForm()
 
 
     def PopulateForm(self):
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
         if self.op == "cmts" or self.op == "rcmts":
             cmts = pickle.loads(self.ui_obj.fs.load(self.selected))
 
             # they came out of the trees man... the trees!
-            cmts_tree_widget = QtGui.QTreeWidget()
+            cmts_tree_widget = QtWidgets.QTreeWidget()
             cmts_tree_widget.setHeaderLabels(("Address", "Old", "New", "Conflicted"))
             cmts_tree_widget.setColumnCount(4)
             cmts_tree_widget.setColumnWidth(0, 110)
@@ -126,21 +126,21 @@ class Applier(PluginForm):
             cmts_tree_widget.setColumnWidth(2, 250)
             cmts_tree_widget.setColumnWidth(3, 20)
             cmts_tree_widget.setSortingEnabled(True)
-            cmts_tree_widget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+            cmts_tree_widget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
             self.cmts_tree_widget = cmts_tree_widget
 
-            button_group     = QtGui.QWidget()
-            button_container = QtGui.QHBoxLayout()
+            button_group     = QtWidgets.QWidget()
+            button_container = QtWidgets.QHBoxLayout()
             button_container.addStretch(1)
             button_group.setLayout(button_container)
 
-            select_all = QtGui.QPushButton("Select All")
+            select_all = QtWidgets.QPushButton("Select All")
             select_all.clicked.connect(self.selectAll)
 
-            clear = QtGui.QPushButton("Clear Selection")
+            clear = QtWidgets.QPushButton("Clear Selection")
             clear.clicked.connect(self.clearSelection)
 
-            apply_selected = QtGui.QPushButton("Apply Selected")
+            apply_selected = QtWidgets.QPushButton("Apply Selected")
             apply_selected.clicked.connect(self.applySelected)
 
             button_container.addWidget(select_all)
@@ -148,15 +148,15 @@ class Applier(PluginForm):
             button_container.addWidget(apply_selected)
             button_container.addStretch(1)
 
-            optional_group     = QtGui.QWidget()
-            optional_container = QtGui.QHBoxLayout()
+            optional_group     = QtWidgets.QWidget()
+            optional_container = QtWidgets.QHBoxLayout()
             optional_container.addStretch(1)
             optional_group.setLayout(optional_container)
 
-            prefix_label = QtGui.QLabel()
+            prefix_label = QtWidgets.QLabel()
             prefix_label.setText("Prefix:")
 
-            prefix_input = QtGui.QLineEdit()
+            prefix_input = QtWidgets.QLineEdit()
             prefix_input.setPlaceholderText("optional")
 
             self.prefix_input = prefix_input
@@ -187,7 +187,7 @@ class Applier(PluginForm):
             current = self.provider.getRptComment(address)
         
         if current != comment and current != None:
-            item = QtGui.QTreeWidgetItem(self.cmts_tree_widget)
+            item = QtWidgets.QTreeWidgetItem(self.cmts_tree_widget)
             if self.ui_obj.options['architecture'] == "32":
                 item.setText(0, "0x%08x" % address)
             else:
@@ -199,7 +199,7 @@ class Applier(PluginForm):
 
         # no conflict
         if current == None or current == comment:
-            item = QtGui.QTreeWidgetItem(self.cmts_tree_widget)
+            item = QtWidgets.QTreeWidgetItem(self.cmts_tree_widget)
             if self.ui_obj.options['architecture'] == "32":
                 item.setText(0, "0x%08x" % address)
             else:
@@ -288,37 +288,37 @@ def myengine(attr):
 
 
     def OnCreate(self, form):
-        self.parent = self.FormToPySideWidget(form)
+        self.parent = self.FormToPyQtWidget(form)
         self.PopulateForm()
 
     def PopulateForm(self):
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         self.layout = layout
 
-        self.textbox = QtGui.QPlainTextEdit()
+        self.textbox = QtWidgets.QPlainTextEdit()
         p = self.textbox.palette()
-        p.setColor(QtGui.QPalette.Base, self.ui_obj.options['background_color'])
-        p.setColor(QtGui.QPalette.WindowText, self.ui_obj.options['font_color'])
+        p.setColor(QtWidgets.QPalette.Base, self.ui_obj.options['background_color'])
+        p.setColor(QtWidgets.QPalette.WindowText, self.ui_obj.options['font_color'])
 
         self.textbox.setPalette(p)
         self.textbox.setFont(self.font)
         self.textbox.setPlainText(self.engine_str)
 
-        button_container = QtGui.QHBoxLayout()
-        button_group     = QtGui.QWidget()
+        button_container = QtWidgets.QHBoxLayout()
+        button_group     = QtWidgets.QWidget()
         button_group.setLayout(button_container)
 
-        execbutton = QtGui.QPushButton("Execute")
+        execbutton = QtWidgets.QPushButton("Execute")
         execbutton.clicked.connect(self.setEngine)
         button_container.addStretch(1)
         button_container.addWidget(execbutton)
         button_container.addStretch(1)
 
-        export_container = QtGui.QHBoxLayout()
-        export_group     = QtGui.QWidget()
+        export_container = QtWidgets.QHBoxLayout()
+        export_group     = QtWidgets.QWidget()
         export_group.setLayout(export_container)
 
-        export_button = QtGui.QPushButton("Export")
+        export_button = QtWidgets.QPushButton("Export")
         export_button.clicked.connect(self.exportData)
         export_container.addStretch(1)
         export_container.addWidget(export_button)
@@ -390,7 +390,7 @@ def myengine(attr):
         num_cols = len(self.labels)
         
         if(isNew):
-            self.table = QtGui.QTableWidget(num_rows, num_cols)
+            self.table = QtWidgets.QTableWidget(num_rows, num_cols)
         else:
             self.table.setColumnCount(num_cols)
             self.table.setRowCount(num_rows)    
@@ -434,7 +434,7 @@ def myengine(attr):
             self.provider.jumpto(int(item.text(), 16))
 
     def makeItem(self, itemStr):
-        item = QtGui.QTableWidgetItem(itemStr)
+        item = QtWidgets.QTableWidgetItem(itemStr)
         item.setFont(self.font)
         item.setForeground(self.fgbrush)
         item.setBackground(self.bgbrush)
@@ -495,20 +495,20 @@ class Query(PluginForm):
 
     def OnCreate(self, form):
         self.myform = form
-        self.parent = self.FormToPySideWidget(form)
+        self.parent = self.FormToPyQtWidget(form)
         self.PopulateForm()
 
 
     def PopulateForm(self):
         addrs           = self.addrs
-        layout          = QtGui.QVBoxLayout()
+        layout          = QtWidgets.QVBoxLayout()
         query_tree      = RefTree.RefTree(self.ui_obj.master)
         self.query_tree = query_tree
 
         for a in addrs:
             query_tree.add_func(a)
         
-        query_tree_widget = QtGui.QTreeWidget()
+        query_tree_widget = QtWidgets.QTreeWidget()
         query_tree_widget.setHeaderLabels(("Name", "Address"))
         query_tree_widget.setColumnCount(2)
         query_tree_widget.setColumnWidth(0, 500)
@@ -534,33 +534,33 @@ class Query(PluginForm):
         palette.setBrush(v.backgroundRole(), bgbrush)
         v.setPalette(palette)
 
-        search_group     = QtGui.QWidget()
-        search_container = QtGui.QHBoxLayout()
+        search_group     = QtWidgets.QWidget()
+        search_container = QtWidgets.QHBoxLayout()
         search_group.setLayout(search_container)
 
-        search = QtGui.QLabel()
+        search = QtWidgets.QLabel()
         search.setText("Search Disassembly:")
         search_container.addWidget(search)
 
-        search_input      = QtGui.QLineEdit()
+        search_input      = QtWidgets.QLineEdit()
         self.search_input = search_input
         search_input.setPlaceholderText("enter search term, things like: 'movsx', 'malloc', '[eax+'")
         search_input.returnPressed.connect(self.doSearch)
         search_container.addWidget(search_input)
 
-        search_button = QtGui.QPushButton("Search")
+        search_button = QtWidgets.QPushButton("Search")
         search_button.clicked.connect(self.doSearch)
         search_container.addWidget(search_button)
 
-        clear_button = QtGui.QPushButton("Clear")
+        clear_button = QtWidgets.QPushButton("Clear")
         clear_button.clicked.connect(self.clearSearch)
         search_container.addWidget(clear_button)
 
-        save_button = QtGui.QPushButton("Save")
+        save_button = QtWidgets.QPushButton("Save")
         save_button.clicked.connect(self.saveAsSess)
         search_container.addWidget(save_button)
 
-        #freeform_radio = QtGui.QRadioButton()
+        #freeform_radio = QtWidgets.QRadioButton()
         #freeform_radio.setText("Free Form")
         regex_checkbox = QtGui.QCheckBox()
         regex_checkbox.setText("Regex?")
@@ -880,7 +880,7 @@ class UI(PluginForm):
         # this can be hit when stack args/vars, structs, enums are renamed
        
     def OnCreate(self, form):
-        self.parent = self.FormToPySideWidget(form)
+        self.parent = self.FormToPyQtWidget(form)
         self.new_windows = []
         self.dyn_imports = dict()
 
@@ -920,7 +920,7 @@ class UI(PluginForm):
             print "[D] createTabAndContainer: printing stack:"
             traceback.print_stack()
 
-        t = QtGui.QWidget()
+        t = QtWidgets.QWidget()
         t.setWindowTitle(title)
         c = layout()
         t.setLayout(c)
@@ -932,7 +932,7 @@ class UI(PluginForm):
             print "[D] initHistoryTree: printing stack:"
             traceback.print_stack()
 
-        history_obj      = QtGui.QTreeWidget()
+        history_obj      = QtWidgets.QTreeWidget()
         self.history_obj = history_obj
         history_obj.setHeaderLabels(("Name","Address"))
         history_obj.setColumnCount(2)
@@ -942,9 +942,9 @@ class UI(PluginForm):
 
         class rightclicka(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     push_action     = menu.addAction("Push to peers")
                     query_action    = menu.addAction("Query DB")
@@ -974,7 +974,7 @@ class UI(PluginForm):
             print "[D] initLocalCmts: printing stack:"
             traceback.print_stack()
 
-        local_cmts      = QtGui.QTreeWidget()
+        local_cmts      = QtWidgets.QTreeWidget()
         self.local_cmts = local_cmts
         local_cmts.setHeaderLabels(("Description", "Location", "Address"))
         local_cmts.setColumnCount(3)
@@ -985,7 +985,7 @@ class UI(PluginForm):
         local_cmts.itemClicked.connect(self.localCmtClicked)
 
 
-        local_cmts_label      = QtGui.QLabel()
+        local_cmts_label      = QtWidgets.QLabel()
         self.local_cmts_label = local_cmts_label
         local_cmts_label.setText("Local comments:")
 
@@ -994,7 +994,7 @@ class UI(PluginForm):
             print "[D] initLocalMarks: printing stack:"
             traceback.print_stack()
             
-        local_marks      = QtGui.QTreeWidget()
+        local_marks      = QtWidgets.QTreeWidget()
         self.local_marks = local_marks
         local_marks.setHeaderLabels(("Description", "Location", "Group", "Address"))
         local_marks.setColumnCount(4)
@@ -1008,9 +1008,9 @@ class UI(PluginForm):
         # install the right-click context menu
         class rightclicka(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     delete_action = menu.addAction("Delete")
                     push_action   = menu.addAction("Push to peers")
@@ -1031,7 +1031,7 @@ class UI(PluginForm):
         local_marks.installEventFilter(eventFilter)
 
 
-        local_marks_label      = QtGui.QLabel()
+        local_marks_label      = QtWidgets.QLabel()
         self.local_marks_label = local_marks_label
         local_marks_label.setText("Local marks:")
 
@@ -1042,7 +1042,7 @@ class UI(PluginForm):
             traceback.print_stack()
             
         self.show_imports = False
-        import_calls      = QtGui.QTreeWidget()
+        import_calls      = QtWidgets.QTreeWidget()
         self.import_calls = import_calls
         import_calls.setHeaderLabels(("Import Name", "Caller", "Address"))
         import_calls.setColumnCount(3)
@@ -1050,7 +1050,7 @@ class UI(PluginForm):
         import_calls.itemClicked.connect(self.importCallClicked)
         self.import_calls.setVisible(False)
 
-        import_calls_label = QtGui.QLabel()
+        import_calls_label = QtWidgets.QLabel()
         import_calls_label.setText("")
         self.import_calls_label = import_calls_label
 
@@ -1061,7 +1061,7 @@ class UI(PluginForm):
             traceback.print_stack()
             
         self.show_strings = False
-        string_refs = QtGui.QTreeWidget()
+        string_refs = QtWidgets.QTreeWidget()
         self.string_refs = string_refs
         string_refs.setHeaderLabels(("String", "Caller", "Address"))
         string_refs.setColumnCount(3)
@@ -1069,7 +1069,7 @@ class UI(PluginForm):
         string_refs.itemClicked.connect(self.importCallClicked)
         string_refs.setVisible(False)
 
-        string_refs_label = QtGui.QLabel()
+        string_refs_label = QtWidgets.QLabel()
         string_refs_label.setText("")
         self.string_refs_label = string_refs_label
 
@@ -1100,7 +1100,7 @@ class UI(PluginForm):
             print "[D] initFileSystem: printing stack:"
             traceback.print_stack()
             
-        fs_tree = QtGui.QTreeWidget()
+        fs_tree = QtWidgets.QTreeWidget()
         fs_tree.setHeaderLabels(("Filename", "Size", "ext"))
         fs_tree.setColumnCount(3)
         fs_tree.setColumnWidth(0, 200)
@@ -1110,16 +1110,16 @@ class UI(PluginForm):
         # XXX: this has to be a custom sort, based on extension
         # or we can add an 'ext' column like i just did 'cause we're lazy
         fs_tree.setSortingEnabled(True)
-        fs_tree.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        fs_tree.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
 
         class rightclicka(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
                     # i'm really trying hard not to re-organize this into a 
                     # more aesthetically pleasing cascade of code
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     load_action            = menu.addAction("Load in History")
                     merge_action           = menu.addAction("Merge Sessions")
@@ -1160,7 +1160,7 @@ class UI(PluginForm):
             print "[D] initGlobalMarks: printing stack:"
             traceback.print_stack()
             
-        mark_list = QtGui.QTreeWidget()
+        mark_list = QtWidgets.QTreeWidget()
         mark_list.setHeaderLabels(("Description", "Location", "Group", "Address"))
         mark_list.setColumnCount(4)
         mark_list.setColumnWidth(0, 120)
@@ -1173,9 +1173,9 @@ class UI(PluginForm):
         # install the right-click context menu
         class rightclicka(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     delete_action = menu.addAction("Delete")
                     push_action   = menu.addAction("Push to peers")
@@ -1204,7 +1204,7 @@ class UI(PluginForm):
             print "[D] initUserScripts: printing stack:"
             traceback.print_stack()
             
-        fileSystemModel = QtGui.QFileSystemModel()
+        fileSystemModel = QtWidgets.QFileSystemModel()
         fileSystemModel.setFilter(QtCore.QDir.Files)
         fileSystemModel.setNameFilters(["*.py"])
         fileSystemModel.setNameFilterDisables(False)
@@ -1212,50 +1212,50 @@ class UI(PluginForm):
         rootPath = self.options['user_scripts_dir']
         
         fileSystemModel.setRootPath(rootPath)
-        view = QtGui.QListView()
+        view = QtWidgets.QListView()
         view.setModel(fileSystemModel)
         view.setRootIndex(fileSystemModel.index(rootPath))
         view.activated.connect(self.userScriptsActivated)
         self.userScripts      = view
         self.userScriptsModel = fileSystemModel
 
-        self.user_scripts_label = QtGui.QLabel()
+        self.user_scripts_label = QtWidgets.QLabel()
         self.user_scripts_label.setText("User Scripts\n--\nDouble click to execute:")
 
-        fileSystemModel2 = QtGui.QFileSystemModel()
+        fileSystemModel2 = QtWidgets.QFileSystemModel()
         fileSystemModel2.setFilter(QtCore.QDir.Files)
         fileSystemModel2.setNameFilters(["*.py"])
         fileSystemModel2.setNameFilterDisables(False)
         rootPath = self.options['vtrace_scripts_dir']
         
         fileSystemModel2.setRootPath(rootPath)
-        view = QtGui.QListView()
+        view = QtWidgets.QListView()
         view.setModel(fileSystemModel2)
         view.setRootIndex(fileSystemModel2.index(rootPath))
         #view.activated.connect(self.vtraceScriptsActivated)
         self.vtraceScripts      = view
         self.vtraceScriptsModel = fileSystemModel2
 
-        self.vtrace_scripts_label = QtGui.QLabel()
+        self.vtrace_scripts_label = QtWidgets.QLabel()
         self.vtrace_scripts_label.setText("VTrace scripts\n--\nRight-click to invoke:")
 
 
         # right clicker for vtrace scripts
         class rightclicka_vtrace(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     edit_action    = menu.addAction("Edit...")
                     prep_action = menu.addAction("Prepare ...")
                     run_action    = menu.addAction("Run on Agent ...")
                     process_action = menu.addAction("Process Results...")
 
-                    obj.connect(edit_action, QtCore.SIGNAL("triggered()"), self.ui.editVtraceScript)
-                    obj.connect(run_action, QtCore.SIGNAL("triggered()"), self.ui.runVtraceScript)
-                    obj.connect(process_action, QtCore.SIGNAL("triggered()"), self.ui.processVTraceScript)
-                    obj.connect(prep_action, QtCore.SIGNAL("triggered()"), self.ui.prepVtraceScript)
+                    obj.activated.connect(edit_action, QtCore.SIGNAL("triggered()"), self.ui.editVtraceScript)
+                    obj.activated.connect(run_action, QtCore.SIGNAL("triggered()"), self.ui.runVtraceScript)
+                    obj.activated.connect(process_action, QtCore.SIGNAL("triggered()"), self.ui.processVTraceScript)
+                    obj.activated.connect(prep_action, QtCore.SIGNAL("triggered()"), self.ui.prepVtraceScript)
                     
                     menu.popup(obj.mapToGlobal(event.pos()))
                     self.ui.rightClickMenuActive = True
@@ -1271,9 +1271,9 @@ class UI(PluginForm):
 
         class rightclicka_user(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
                     edit_action = menu.addAction("Edit...")
 
                     obj.connect(edit_action, QtCore.SIGNAL("triggered()"), self.ui.editUserScript)
@@ -1298,34 +1298,34 @@ class UI(PluginForm):
             print "[D] initPathfinding: printing stack:"
             traceback.print_stack()
 
-        pathfinding_group     = QtGui.QWidget()
-        pathfinding_container = QtGui.QVBoxLayout()
+        pathfinding_group     = QtWidgets.QWidget()
+        pathfinding_container = QtWidgets.QVBoxLayout()
         pathfinding_group.setLayout(pathfinding_container)
 
-        function_group     = QtGui.QWidget()
-        function_container = QtGui.QVBoxLayout()
+        function_group     = QtWidgets.QWidget()
+        function_container = QtWidgets.QVBoxLayout()
         function_group.setLayout(function_container)
 
-        function_label = QtGui.QLabel()
+        function_label = QtWidgets.QLabel()
         function_label.setText("Function:")
 
-        f_start_end_container = QtGui.QVBoxLayout()
-        f_start_end_group     = QtGui.QWidget()
+        f_start_end_container = QtWidgets.QVBoxLayout()
+        f_start_end_group     = QtWidgets.QWidget()
         f_start_end_group.setLayout(f_start_end_container)
         
-        path_start     = QtGui.QLabel() 
+        path_start     = QtWidgets.QLabel() 
         self.pathStart = path_start
         path_start.setText("Start address:")
 
-        path_end     = QtGui.QLabel()
+        path_end     = QtWidgets.QLabel()
         self.pathEnd = path_end
         path_end.setText("End address:")
 
-        button_container = QtGui.QHBoxLayout()
-        button_group     = QtGui.QWidget()
+        button_container = QtWidgets.QHBoxLayout()
+        button_group     = QtWidgets.QWidget()
         button_group.setLayout(button_container)
 
-        plot_fpath = QtGui.QPushButton("Plot Function Path")
+        plot_fpath = QtWidgets.QPushButton("Plot Function Path")
         plot_fpath.clicked.connect(self.plot_path)
 
         button_container.addStretch(1)
@@ -1341,20 +1341,20 @@ class UI(PluginForm):
         pathfinding_container.addWidget(f_start_end_group)
         pathfinding_container.addWidget(button_group)
 
-        bb_group     = QtGui.QWidget()
-        bb_container = QtGui.QVBoxLayout()
+        bb_group     = QtWidgets.QWidget()
+        bb_container = QtWidgets.QVBoxLayout()
         bb_group.setLayout(bb_container)
 
-        b_start_end_container = QtGui.QVBoxLayout()
-        b_start_end_group     = QtGui.QWidget()
+        b_start_end_container = QtWidgets.QVBoxLayout()
+        b_start_end_group     = QtWidgets.QWidget()
         b_start_end_group.setLayout(b_start_end_container)
 
 
-        button2_container = QtGui.QHBoxLayout()
-        button2_group     = QtGui.QWidget()
+        button2_container = QtWidgets.QHBoxLayout()
+        button2_group     = QtWidgets.QWidget()
         button2_group.setLayout(button2_container)
 
-        plot_bpath = QtGui.QPushButton("Plot Basic Block Path to Current EA")
+        plot_bpath = QtWidgets.QPushButton("Plot Basic Block Path to Current EA")
         plot_bpath.clicked.connect(self.plot_bb_path)
 
         button2_container.addStretch(1)
@@ -1372,11 +1372,11 @@ class UI(PluginForm):
             print "[D] initOptions: printing stack:"
             traceback.print_stack()
             
-        options_group = QtGui.QWidget()
-        options_container = QtGui.QVBoxLayout()
+        options_group = QtWidgets.QWidget()
+        options_container = QtWidgets.QVBoxLayout()
         options_group.setLayout(options_container)
 
-        label = QtGui.QLabel()
+        label = QtWidgets.QLabel()
         label.setText("Super ghetto way to edit your options on the fly\n--\n(apologies for formatting)\n")
 
         # this is so ghetto
@@ -1400,12 +1400,12 @@ class UI(PluginForm):
 
         output += "}\n"
 
-        wow = QtGui.QTextEdit()
+        wow = QtWidgets.QTextEdit()
         wow.setText(output)
 
         self.dynamicOptions = wow
 
-        apply_button = QtGui.QPushButton()
+        apply_button = QtWidgets.QPushButton()
         apply_button.setText("Apply")
         apply_button.clicked.connect(self.applyOptions)
 
@@ -1420,34 +1420,34 @@ class UI(PluginForm):
             print "[D] initQueues: printing stack:"
             traceback.print_stack()
             
-        host_group     = QtGui.QWidget()
-        host_container = QtGui.QHBoxLayout()
+        host_group     = QtWidgets.QWidget()
+        host_container = QtWidgets.QHBoxLayout()
         host_group.setLayout(host_container)
 
-        port_group     = QtGui.QWidget()
-        port_container = QtGui.QHBoxLayout()
+        port_group     = QtWidgets.QWidget()
+        port_container = QtWidgets.QHBoxLayout()
         port_group.setLayout(port_container)
 
-        key_group     = QtGui.QWidget()
-        key_container = QtGui.QHBoxLayout()
+        key_group     = QtWidgets.QWidget()
+        key_container = QtWidgets.QHBoxLayout()
         key_group.setLayout(key_container)
 
 
-        add_item_group     = QtGui.QWidget()
-        add_item_container = QtGui.QHBoxLayout()
+        add_item_group     = QtWidgets.QWidget()
+        add_item_container = QtWidgets.QHBoxLayout()
         add_item_group.setLayout(add_item_container)
 
-        radio_group     = QtGui.QWidget()
-        radio_container = QtGui.QVBoxLayout()
+        radio_group     = QtWidgets.QWidget()
+        radio_container = QtWidgets.QVBoxLayout()
         radio_group.setLayout(radio_container)
 
 
         # host
-        host = QtGui.QLabel()
+        host = QtWidgets.QLabel()
         host.setText("Host:")
         host_container.addWidget(host)
 
-        host_input        = QtGui.QLineEdit()
+        host_input        = QtWidgets.QLineEdit()
         self.queueHostObj = host_input
         #if self.options.has_key('host'):
         #    self.queueHost = self.options['server_host']
@@ -1457,41 +1457,41 @@ class UI(PluginForm):
         host_container.addWidget(host_input)
 
         # port
-        port = QtGui.QLabel()
+        port = QtWidgets.QLabel()
         port.setText("Port:")
         port_container.addWidget(port)
 
-        port_input        = QtGui.QLineEdit()
+        port_input        = QtWidgets.QLineEdit()
         self.queuePortObj = port_input
         port_input.setPlaceholderText("<enter port number>")
         port_container.addWidget(port_input)
 
         # key
-        key = QtGui.QLabel()
+        key = QtWidgets.QLabel()
         key.setText("Key:")
         key_container.addWidget(key)
 
-        key_input        = QtGui.QLineEdit()
+        key_input        = QtWidgets.QLineEdit()
         self.queueKeyObj = key_input
         key_input.setPlaceholderText("<enter key>")
         key_container.addWidget(key_input)
 
         # add button and radio buttons
-        add_queue = QtGui.QPushButton()
+        add_queue = QtWidgets.QPushButton()
         add_queue.setText("Add")
         add_queue.clicked.connect(self.addQueue)
         add_item_container.addWidget(add_queue)
 
-        peerRadio      = QtGui.QRadioButton(radio_group)
+        peerRadio      = QtWidgets.QRadioButton(radio_group)
         self.peerRadio = peerRadio
         peerRadio.setText("Peer")
 
-        serverRadio      = QtGui.QRadioButton(radio_group)
+        serverRadio      = QtWidgets.QRadioButton(radio_group)
         self.serverRadio = serverRadio
         serverRadio.setText("Server")
         
         
-        agentRadio      = QtGui.QRadioButton(radio_group)
+        agentRadio      = QtWidgets.QRadioButton(radio_group)
         self.agentRadio = agentRadio
         agentRadio.setText("Agent")
         
@@ -1503,8 +1503,8 @@ class UI(PluginForm):
         add_item_container.addWidget(agentRadio)
 
         # input group
-        queue_input_group = QtGui.QWidget()
-        input_container   = QtGui.QVBoxLayout()
+        queue_input_group = QtWidgets.QWidget()
+        input_container   = QtWidgets.QVBoxLayout()
         queue_input_group.setLayout(input_container)
 
         input_container.addWidget(host_group)
@@ -1515,7 +1515,7 @@ class UI(PluginForm):
         self.queueInput = queue_input_group
 
         # Queue List
-        queue_list = QtGui.QTreeWidget()
+        queue_list = QtWidgets.QTreeWidget()
         queue_list.setHeaderLabels(("Host", "", "Type", ""))
         queue_list.setColumnCount(4)
         self.queueList = queue_list
@@ -1525,9 +1525,9 @@ class UI(PluginForm):
         # right click context
         class rightclicka(QtCore.QObject):
             def eventFilter(self, obj, event):
-                if event.type() == QtCore.QEvent.Type.ContextMenu:
+                if event.type() == QtCore.QEvent.ContextMenu:
 
-                    menu = QtGui.QMenu()
+                    menu =QtWidgets.QMenu()
 
                     store_action  = menu.addAction("Store...")
                     reject_action = menu.addAction("Reject")
@@ -1558,14 +1558,14 @@ class UI(PluginForm):
             traceback.print_stack()
             
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
-        tabs = QtGui.QTabWidget()
+        tabs = QtWidgets.QTabWidget()
         tabs.setMovable(True)
         self.tabs = tabs
 
         # Tab #1 - History Tree
-        tab1, tab1_container = self.createTabAndContainer("History", QtGui.QVBoxLayout)
+        tab1, tab1_container = self.createTabAndContainer("History", QtWidgets.QVBoxLayout)
         self.historyTab = tab1
 
         # Create history tree
@@ -1584,12 +1584,12 @@ class UI(PluginForm):
         # Create the show strings view
         self.initShowStrings()
 
-        stupid = QtGui.QWidget()
-        stupid_container = QtGui.QVBoxLayout()
+        stupid = QtWidgets.QWidget()
+        stupid_container = QtWidgets.QVBoxLayout()
         #stupid_container.setSizeConstraint(QtGui.QLayout.SetFixedSize)
         stupid_container.setSpacing(0)
         stupid.setLayout(stupid_container)
-        history_toolbar = QtGui.QToolBar()
+        history_toolbar = QtWidgets.QToolBar()
         rsrc_dir = self.options['ida_user_dir'] + os.sep + "rsrc"
         
         save_icon = QtGui.QIcon(rsrc_dir + os.sep + "save.png")
@@ -1600,25 +1600,25 @@ class UI(PluginForm):
         query_db_icon = QtGui.QIcon(rsrc_dir + os.sep + "querydb.png")
         push_peers_icon = QtGui.QIcon(rsrc_dir + os.sep + "pushpeers.png")
         
-        self.save_button = QtGui.QToolButton()
+        self.save_button = QtWidgets.QToolButton()
         self.save_button.setIcon(save_icon)
 
-        self.clear_button = QtGui.QToolButton()
+        self.clear_button = QtWidgets.QToolButton()
         self.clear_button.setIcon(clear_icon)
         
-        self.show_imports_button = QtGui.QToolButton()
+        self.show_imports_button = QtWidgets.QToolButton()
         self.show_imports_button.setIcon(import_icon)
         
-        self.show_strings_button = QtGui.QToolButton()
+        self.show_strings_button = QtWidgets.QToolButton()
         self.show_strings_button.setIcon(strings_icon)
         
-        self.add_edge_button = QtGui.QToolButton()
+        self.add_edge_button = QtWidgets.QToolButton()
         self.add_edge_button.setIcon(add_edge_icon)
 
-        self.query_db_button = QtGui.QToolButton()
+        self.query_db_button = QtWidgets.QToolButton()
         self.query_db_button.setIcon(query_db_icon)
 
-        self.push_peers_button = QtGui.QToolButton()
+        self.push_peers_button = QtWidgets.QToolButton()
         self.push_peers_button.setIcon(push_peers_icon)
         
         history_toolbar.addWidget(self.save_button)
@@ -1646,18 +1646,18 @@ class UI(PluginForm):
         for b in history_buttons:
             self.initToolbarButtons(b[0], b[1], b[2])
 
-        stupid2 = QtGui.QWidget()
-        stupid2_container = QtGui.QVBoxLayout()
+        stupid2 = QtWidgets.QWidget()
+        stupid2_container = QtWidgets.QVBoxLayout()
         #stupid2_container.setSizeConstraint(QtGui.QLayout.SetFixedSize)
         stupid2_container.setSpacing(0)
         stupid2.setLayout(stupid2_container)
 
         if self.options['localview'] == 'marks':
-            local_marks_toolbar = QtGui.QToolBar()
+            local_marks_toolbar = QtWidgets.QToolBar()
         
             delete_local_mark_icon = QtGui.QIcon(rsrc_dir + os.sep + "clear.png")
         
-            self.delete_local_mark_button = QtGui.QToolButton()
+            self.delete_local_mark_button = QtWidgets.QToolButton()
             self.delete_local_mark_button.setIcon(delete_local_mark_icon)
         
             local_marks_toolbar.addWidget(self.delete_local_mark_button)
@@ -1675,11 +1675,11 @@ class UI(PluginForm):
             # no toolbar
             pass
 
-        split_thing = QtGui.QWidget()
-        split_thing_container = QtGui.QVBoxLayout()
+        split_thing = QtWidgets.QWidget()
+        split_thing_container = QtWidgets.QVBoxLayout()
         split_thing.setLayout(split_thing_container)
 
-        splitter = QtGui.QSplitter()
+        splitter = QtWidgets.QSplitter()
         splitter.setOrientation(QtCore.Qt.Vertical)
         splitter.addWidget(self.history_obj)
         splitter.addWidget(stupid2)
@@ -1707,18 +1707,18 @@ class UI(PluginForm):
         self.addItemsToContainer(tab1_container, tab1_items)
 
         # Tab #2 - File System View
-        tab2, tab2_container = self.createTabAndContainer("File System", QtGui.QVBoxLayout)
+        tab2, tab2_container = self.createTabAndContainer("File System", QtWidgets.QVBoxLayout)
         self.fsTab = tab2
 
         # Create file system widget
         self.initFileSystem()
         
-        stupid = QtGui.QWidget()
-        stupid_container = QtGui.QVBoxLayout()
+        stupid = QtWidgets.QWidget()
+        stupid_container = QtWidgets.QVBoxLayout()
         #stupid_container.setSizeConstraint(QtGui.QLayout.SetFixedSize)
         stupid_container.setSpacing(0)
         stupid.setLayout(stupid_container)
-        filesystem_toolbar = QtGui.QToolBar()
+        filesystem_toolbar = QtWidgets.QToolBar()
         
         addfile_icon = QtGui.QIcon(rsrc_dir + os.sep + "addfile.png")
         removefile_icon = QtGui.QIcon(rsrc_dir + os.sep + "removefile.png")
@@ -1729,25 +1729,25 @@ class UI(PluginForm):
         saveasvar_icon = QtGui.QIcon(rsrc_dir + os.sep + "save.png")
         
         
-        self.addfile_button = QtGui.QToolButton()
+        self.addfile_button = QtWidgets.QToolButton()
         self.addfile_button.setIcon(addfile_icon)
 
-        self.removefile_button = QtGui.QToolButton()
+        self.removefile_button = QtWidgets.QToolButton()
         self.removefile_button.setIcon(removefile_icon)
 
-        self.mergefile_button = QtGui.QToolButton()
+        self.mergefile_button = QtWidgets.QToolButton()
         self.mergefile_button.setIcon(mergefile_icon)
 
-        self.exportfile_button = QtGui.QToolButton()
+        self.exportfile_button = QtWidgets.QToolButton()
         self.exportfile_button.setIcon(exportfile_icon)
 
-        self.loadinhistory_button = QtGui.QToolButton()
+        self.loadinhistory_button = QtWidgets.QToolButton()
         self.loadinhistory_button.setIcon(loadinhistory_icon)
 
-        self.apply_button = QtGui.QToolButton()
+        self.apply_button = QtWidgets.QToolButton()
         self.apply_button.setIcon(apply_icon)
 
-        self.saveasvar_button = QtGui.QToolButton()
+        self.saveasvar_button = QtWidgets.QToolButton()
         self.saveasvar_button.setIcon(saveasvar_icon)
         
         filesystem_toolbar.addWidget(self.addfile_button)
@@ -1779,19 +1779,19 @@ class UI(PluginForm):
         self.addItemsToContainer(tab2_container, [self.fsTree])
  
         # Tab #3 - Marks
-        tab3, tab3_container = self.createTabAndContainer("Global Marks", QtGui.QVBoxLayout)
+        tab3, tab3_container = self.createTabAndContainer("Global Marks", QtWidgets.QVBoxLayout)
         self.markTab = tab3        
 
-        stupid3 = QtGui.QWidget()
-        stupid3_container = QtGui.QVBoxLayout()
+        stupid3 = QtWidgets.QWidget()
+        stupid3_container = QtWidgets.QVBoxLayout()
         #stupid_container.setSizeConstraint(QtGui.QLayout.SetFixedSize)
         stupid3_container.setSpacing(0)
         stupid3.setLayout(stupid3_container)
-        global_marks_toolbar = QtGui.QToolBar()
+        global_marks_toolbar = QtWidgets.QToolBar()
         
         delete_global_mark_icon = QtGui.QIcon(rsrc_dir + os.sep + "clear.png")
         
-        self.delete_global_mark_button = QtGui.QToolButton()
+        self.delete_global_mark_button = QtWidgets.QToolButton()
         self.delete_global_mark_button.setIcon(delete_global_mark_icon)
 
         global_marks_toolbar.addWidget(self.delete_global_mark_button)
@@ -1814,7 +1814,7 @@ class UI(PluginForm):
         self.addItemsToContainer(tab3_container, [stupid3, self.markList])
      
         # Tab #4 - Scripts
-        tab4, tab4_container = self.createTabAndContainer("Scripts", QtGui.QVBoxLayout)
+        tab4, tab4_container = self.createTabAndContainer("Scripts", QtWidgets.QVBoxLayout)
         self.userScriptsTab = tab4
 
         # Create user scripts widget
@@ -1823,7 +1823,7 @@ class UI(PluginForm):
         self.addItemsToContainer(tab4_container, [self.user_scripts_label, self.userScripts, self.vtrace_scripts_label, self.vtraceScripts])
 
         # Tab #5 - Pathfinding
-        tab5, tab5_container = self.createTabAndContainer("Pathfinding", QtGui.QVBoxLayout)
+        tab5, tab5_container = self.createTabAndContainer("Pathfinding", QtWidgets.QVBoxLayout)
         self.pathFindingTab = tab5
 
         # create pathfinding widget
@@ -1832,7 +1832,7 @@ class UI(PluginForm):
         self.addItemsToContainer(tab5_container, [self.pathfinding_group])
 
         # Tab #6 - Queues
-        tab6, tab6_container = self.createTabAndContainer("Queues", QtGui.QVBoxLayout)
+        tab6, tab6_container = self.createTabAndContainer("Queues", QtWidgets.QVBoxLayout)
         self.queueTab = tab6
 
         self.initQueues()
@@ -1842,18 +1842,18 @@ class UI(PluginForm):
         tab6_container.addWidget(self.queueList)
 
         # Tab #7 - Options
-        tab7, tab7_container = self.createTabAndContainer("Options", QtGui.QVBoxLayout)
+        tab7, tab7_container = self.createTabAndContainer("Options", QtWidgets.QVBoxLayout)
         self.optionsTab = tab7
         self.initOptions()
         self.addItemsToContainer(tab7_container, [self.options_group])
 
-        mainMenu = QtGui.QMenuBar()
+        mainMenu = QtWidgets.QMenuBar()
 
-        view_menu = QtGui.QMenu("View")
+        view_menu =QtWidgets.QMenu("View")
         mainMenu.addMenu(view_menu)
         self.view_menu = view_menu
 
-        #options_menu = QtGui.QMenu("Options")
+        #options_menu =QtWidgets.QMenu("Options")
         #mainMenu.addMenu(options_menu)
 
         res = view_menu.addAction("Scripts", self.toggleUserScriptsTab)
@@ -2014,7 +2014,7 @@ class UI(PluginForm):
             
         root       = tree[0]        
         children   = tree[1]
-        rootWidget = QtGui.QTreeWidgetItem(parentWidget)
+        rootWidget = QtWidgets.QTreeWidgetItem(parentWidget)
        
         name = self.provider.demangleName(self.provider.getName(root))
         if name == None:
@@ -2379,10 +2379,10 @@ class UI(PluginForm):
                 self.field1.keyPressEvent = self.keyPressEvent
                 self.field2.keyPressEvent = self.keyPressEvent
                 
-                confirm = QtGui.QPushButton("Add Mark")
+                confirm = QtWidgets.QPushButton("Add Mark")
                 confirm.clicked.connect(self.add_mark)
 
-                layout = QtGui.QVBoxLayout()
+                layout = QtWidgets.QVBoxLayout()
                 layout.addWidget(self.field2)
                 layout.addWidget(self.field1)
                 
@@ -2761,7 +2761,7 @@ class UI(PluginForm):
                     if current_ea != addy:
                         continue
             
-                cmt_item = QtGui.QTreeWidgetItem(self.localview)
+                cmt_item = QtWidgets.QTreeWidgetItem(self.localview)
 
                 if is_import:
                     func_top = addy
@@ -2846,7 +2846,7 @@ class UI(PluginForm):
             if groups.has_key(mark_ea):
 
                 # XXX: we need to ensure we don't have it already in the list
-                mark_item = QtGui.QTreeWidgetItem(mark_obj)
+                mark_item = QtWidgets.QTreeWidgetItem(mark_obj)
                 mark_description = data['mark']           
 
                 if is_import:
@@ -2889,7 +2889,7 @@ class UI(PluginForm):
                 del(font)
   
             else:
-                mark_item = QtGui.QTreeWidgetItem(mark_obj)
+                mark_item = QtWidgets.QTreeWidgetItem(mark_obj)
                 mark_description = data['mark']           
 
                 if is_import:
@@ -3075,7 +3075,7 @@ class UI(PluginForm):
             if n == '__internal__': continue
 
             size = len(self.fs.load(n))
-            rootWidget = QtGui.QTreeWidgetItem(self.fsTree)
+            rootWidget = QtWidgets.QTreeWidgetItem(self.fsTree)
             font = QtGui.QFont(self.options['font_name'], int(self.options['font_size']))
             rootWidget.setFont(0, font)
             rootWidget.setFont(1, font)          
@@ -3310,7 +3310,7 @@ class UI(PluginForm):
         except KeyError:
             obj = obj_data
 
-        fname, ok = QtGui.QInputDialog().getText(None, "Save to variable", "Enter variable name:", QtGui.QLineEdit.Normal, "")
+        fname, ok = QtGui.QInputDialog().getText(None, "Save to variable", "Enter variable name:", QtWidgets.QLineEdit.Normal, "")
 
         try:
             print "[*] Saving file %s into global variable dictionary toolbag.toolbag.retvals with key '%s'" % (selected, fname)
@@ -3468,7 +3468,7 @@ class UI(PluginForm):
                                                 modname = module
                                                 break
 
-                                    item = QtGui.QTreeWidgetItem(self.import_calls)
+                                    item = QtWidgets.QTreeWidgetItem(self.import_calls)
                                     item.setText(0, "%s!%s" % (modname,name))
                                     caller_name = self.provider.demangleName(self.provider.getName(startEA))
                                     if caller_name == None:
@@ -3540,7 +3540,7 @@ class UI(PluginForm):
                                     value = self.provider.getString(r)
                                     value = value.replace("\n", "\\n ")
                                     
-                                    item = QtGui.QTreeWidgetItem(self.string_refs)
+                                    item = QtWidgets.QTreeWidgetItem(self.string_refs)
                                     item.setText(0, "%s" % value)
                                     caller_name = self.provider.demangleName(self.provider.getName(startEA))
                                     if caller_name == None:
@@ -4022,7 +4022,7 @@ class UI(PluginForm):
                 print detail
                 return
 
-            item = QtGui.QTreeWidgetItem(self.queueList)
+            item = QtWidgets.QTreeWidgetItem(self.queueList)
             item.setText(0, "%s" % host)
             item.setText(1, "")
             item.setText(2, "SERVER")
@@ -4052,7 +4052,7 @@ class UI(PluginForm):
                 print detail
                 return
 
-            item = QtGui.QTreeWidgetItem(self.queueList)
+            item = QtWidgets.QTreeWidgetItem(self.queueList)
             item.setText(0, "%s" % host)
             item.setText(1, "%d" % port)
             item.setText(2, "PEER")
@@ -4080,7 +4080,7 @@ class UI(PluginForm):
                 socket.setdefaulttimeout(None)
                 return
 
-            item = QtGui.QTreeWidgetItem(self.queueList)
+            item = QtWidgets.QTreeWidgetItem(self.queueList)
             item.setText(0, "%s" % host)
             item.setText(1, "%d" % port)
             item.setText(2, "AGENT")
@@ -4090,10 +4090,14 @@ class UI(PluginForm):
 
 
     def OnClose(self, form):
+        # scra debugging
+        f = open('C:\dbg\out.txt', 'a')
+        f.write('='*30+'\n')
+        print "Entering OnClose"
         if self.options['dev_mode']:
             print "[D] OnClose: printing stack:"
             traceback.print_stack()
-            
+        
         try:
             comment_dict = pickle.loads(self.fs.load("default.cmts"))
         except:
@@ -4109,6 +4113,7 @@ class UI(PluginForm):
         self.fs.store("default.rcmts", pickle.dumps(rcomment_dict))
 
         # store the master graph
+        f.write('  Storing master Graph \n')
         fh = open(self.options['full_file_name'], 'wb')
         pickle.dump(self.master, fh)
         fh.close()
@@ -4120,19 +4125,23 @@ class UI(PluginForm):
                 del self.timer1
         except AttributeError:
             pass
-
+        f.write('[*] Timer objects deleted \n')
         print "[*] Timer objects deleted"
 
         socket.setdefaulttimeout(0.5)
 
         try:
             self.myhost.end()
+            f.write('[*] Server object deleted \n')
             print "[*] Server object deleted"
         except Exception as detail:
+            f.write('[*] Server object ERROR \n')
+            f.write(str(detail))
             pass
 
         try:
             del self.myhost
+            f.write('[*] myHost deleted \n')
         except:
             pass
 
@@ -4146,21 +4155,27 @@ class UI(PluginForm):
         #del(self.db)
         del(self.fs)
         del(self.reftree)
+        f.write('fs and reftree deleted \n')
 
         # delete any Query objects we created
         # prevents IDA from crashing due to a dangling reference
-        '''
+        f.write('deleting windows \n')
+        f.write(str(self.new_windows))
         for c in self.new_windows:
             try:
+                f.write(type(c)+'\n') 
                 del(c)
             except:
+                f.write('passed '+type(c)+'\n')  
                 pass
-        '''
+        
         # remove the UI hooks
+        f.write('unhooking stuff \n')
         self.ui_hook.unhook()
         #del self.ui_hook
-
+        f.write('XXXXXXXXX donso  \n')
         print "[*] Toolbag has been shut down"
+        #sip.setdestroyonexit(True)
 
 
     def timerthing(self):
@@ -4270,7 +4285,7 @@ class UI(PluginForm):
         objtype = self.peerdata.fetchattr(item, "objtype")
         msg = self.peerdata.fetchattr(item, "data")
 
-        fname, ok = QtGui.QInputDialog().getText(None, "Store Object", "Enter filename:", QtGui.QLineEdit.Normal, objname)
+        fname, ok = QtGui.QInputDialog().getText(None, "Store Object", "Enter filename:", QtWidgets.QLineEdit.Normal, objname)
 
         if fname == None or not ok:
             self.rightClickMenuActive = False
@@ -4369,7 +4384,7 @@ class UI(PluginForm):
             new_id = self.peerdata.newid()
             self.peerdata.add(pkt.ip, pkt.filename, pkt.opcode, pkt.msg, new_id)
 
-            peer_data_widget = QtGui.QTreeWidgetItem(self.queueServer)
+            peer_data_widget = QtWidgets.QTreeWidgetItem(self.queueServer)
             peer_data_widget.setExpanded(True)
             self.queueServer.setExpanded(True)
             peer_data_widget.setText(0, "%s" % pkt.ip)
